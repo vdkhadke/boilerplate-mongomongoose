@@ -6,6 +6,7 @@
 /** # MONGOOSE SETUP #
 /*  ================== */
 var mongoose = require('mongoose');
+
 /** 1) Install & Set up mongoose */
 
 // Add mongodb and mongoose to the project's package.json. Then require 
