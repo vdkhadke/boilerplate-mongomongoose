@@ -298,13 +298,13 @@ var chain = require('./myApp.js').queryChain;
 router.post('/query-tools', function(req, res, next) {
   var t = setTimeout(() => { next({message: 'timeout'}) }, timeout);
   Person.remove({}, function(err) {
-    if(err) { return next(err) }
+    if(err) { return next(err); }
     Person.create(req.body, function(err, pers) {
-      if(err) { return next(err) }
+      if(err) { return next(err); }
       try {
         chain(function(err, data) {
           clearTimeout(t);
-          if(err) { return next(err) }
+          if(err) { return next(err);}
           if (!data) {
             console.log('Missing `done()` argument');
             return next({ message: 'Missing callback argument' });
@@ -316,7 +316,7 @@ router.post('/query-tools', function(req, res, next) {
         return next(e);
       }
     });
-  })
+  });
 });
 
 app.use('/_api', enableCORS, router);
