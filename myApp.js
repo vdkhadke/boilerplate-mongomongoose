@@ -6,7 +6,6 @@
 /** # MONGOOSE SETUP #
 /*  ================== */
 var mongoose = require('mongoose');
-
 /** 1) Install & Set up mongoose */
 
 // Add mongodb and mongoose to the project's package.json. Then require 
@@ -55,7 +54,9 @@ var Person = mongoose.model('Person', personSchema);
 // (e.g. someone hits an endpoint on your API). We'll follow the same approach
 // in these exercises. The `done()` function is a callback that tells us that
 // we can proceed after completing an asynchronous operation such as inserting,
-// searching, updating or deleting. It's following the Node convention and
+// searching, updating or deleting.
+// `doc` is the document _after_ `update` was applied because of
+// `new: true`
 // should be called as `done(null, data)` on success, or `done(err)` on error.
 // **Warning** - When interacting with remote services, **errors may occur** !
 
@@ -126,7 +127,6 @@ var createManyPeople = function(arrayOfPeople, done) {
 // object ) as the first argument, and returns an **array** of matches.
 // It supports an extremely wide range of search options. Check it in the docs.
 // Use the function argument `personName` as search key.
-var personName = 'viplav';
 var findPeopleByName = function(personName, done) {
   Person.find({name: personName}, function(err, data) {
     if(err){
@@ -225,7 +225,6 @@ var findEditThenSave = function(personId, done) {
 // you need to pass the options document `{ new: true }` as the 3rd argument
 // to `findOneAndUpdate()`. By default the method
 // passes the unmodified object to its callback.
-
 var findAndUpdate = function(personName, done) {
   var ageToSet = 20;
   Person.findOneAndUpdate({name: personName}, {age: ageToSet} ,{ new: true }, function(err, result) {
@@ -234,6 +233,19 @@ var findAndUpdate = function(personName, done) {
     } done(null, result)
   });
 }
+//     if(err){
+//       return err;
+//     }
+//     personFnd.age = 20;
+//     personFnd.save(function(err, personFnd){
+//       if(err){
+//         return err;
+//       }
+//       done(null, personFnd);
+//     })
+//   })
+// };
+
 
 /** # CRU[D] part IV - DELETE #
 /*  =========================== */
@@ -291,10 +303,16 @@ var removeManyPeople = function(done) {
 // Chain `.find()`, `.sort()`, `.limit()`, `.select()`, and then `.exec()`,
 // passing the `done(err, data)` callback to it.
 
+
 var queryChain = function(done) {
   var foodToSearch = "burrito";
-  
-  done(null/*, data*/);
+  var query = Person.find({favoriteFoods : foodToSearch}).sort({name:1}).limit(2).select('-age');
+   query.exec(function(err, data){
+    if(err){
+      return err;
+    }
+    done(null,data);
+  })
 };
 
 /** **Well Done !!**
